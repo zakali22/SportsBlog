@@ -1,0 +1,41 @@
+<% include ./partials/head %>
+    <h1 class="text-center"><%= title %></h1>
+	<div class="container">   
+		<% if(errors) { %> 
+		    <ul style="padding: 0; margin: 0; list-style: none">
+			    <% errors.forEach((error) => { %>
+			    	<li class="alert alert-danger"><%= error.msg %></li>
+				<% }) %>
+			</ul>
+		<% } %> 
+	   	<form method="post" action="/manage/articles/add">
+		  <div class="form-group">
+		    <label for="title">Title</label>
+		    <input name="title" type="text" class="form-control" id="title"  placeholder="Enter title">
+		  </div>
+		  <div class="form-group">
+		    <label for="subtitle">Sub-title</label>
+		    <input name="subtitle" type="text" class="form-control" id="subtitle"  placeholder="Enter subtitle">
+		  </div>
+		  <div class="form-group">
+		    <label for="author">Author</label>
+		    <input name="author" type="text" class="form-control" id="author"  placeholder="Enter your name">
+		  </div>
+		  <div class="form-group">
+		    <label for="author">Category</label>
+		   	<select class="form-control" name="category">
+				<% categories.forEach((category) => { %>
+					<option value="<%= category.title %>"><%= category.title %></option>
+				<% }) %>
+			</select>
+		  </div>
+		  <div class="form-group">
+		    <label for="body">Body</label>
+		    <textarea name="body" class="form-control" id="body" placeholder="Enter body"></textarea>
+		  </div>
+		  <button type="submit" class="btn btn-outline-primary">Submit</button>
+		  <a href="/manage/articles" class="btn btn-outline-danger">Cancel</a>
+		</form>
+	</div>
+
+<% include ./partials/footer %>

@@ -1,0 +1,35 @@
+<% include ./partials/head %>
+    <h1><%= title %></h1>
+   	<div class="container">    
+	   	<form method="post" action="/manage/articles/edit/<%= article._id %>">
+		  <div class="form-group">
+		    <label for="title">Title</label>
+		    <input name="title" type="text" class="form-control" id="title"  value="<%= article.title %>">
+		  </div>
+		  <div class="form-group">
+		    <label for="subtitle">Sub-title</label>
+		    <input name="subtitle" type="text" class="form-control" id="subtitle"  value="<%= article.subtitle %>">
+		  </div>
+		  <div class="form-group">
+		    <label for="author">Author</label>
+		    <input name="author" type="text" class="form-control" id="author"  value="<%= article.author %>">
+		  </div>
+		  <div class="form-group">
+		    <label for="author">Category</label>
+		   	<select class="form-control">
+				<% categories.forEach((category) => { %>
+					<option value="<%= category.title %>"><%= category.title %></option>
+				<% }) %>
+			</select>
+		  </div>
+		  <div class="form-group">
+		    <label for="body">Body</label>
+		    <textarea name="body" class="form-control" id="body"><%= article.body %></textarea>
+		  </div>
+		  <button type="submit" class="btn btn-outline-success">Submit</button>
+		  <a href="/manage/articles/delete/<%= article._id %>" data-item="<%= article._id %>" class="delete_article btn btn-outline-danger">Delete</a>
+		  <a href="/manage/articles">Cancel</a>
+		</form>
+	</div>
+
+<% include ./partials/footer %>

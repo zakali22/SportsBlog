@@ -1,0 +1,17 @@
+<% include ./partials/head %>
+    <h1 class="text-center"><%= title %></h1>
+	<div class="container">    
+	   	<form method="post" action="/manage/categories/edit/<%= category._id %>">
+		  <div class="form-group">
+		    <label for="title">Title</label>
+		    <input name="title" type="text" class="form-control" id="title" value="<%= category.title %>">
+		  </div>
+		  <div class="form-group">
+		    <label for="description">Description</label>
+		    <textarea name="description" class="form-control" id="description"><%= category.description %></textarea>
+		  </div>
+		  <button type="submit" class="btn btn-outline-primary">Submit</button>
+		  <a href="/manage/categories" class="btn btn-outline-danger">Cancel</a>
+		</form>
+	</div>
+<% include ./partials/footer %>

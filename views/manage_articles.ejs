@@ -1,0 +1,19 @@
+<% include ./partials/head %>
+    <h1 class="text-center mb-3"><%= title %></h1>
+    <div class="container">
+    	<%- messages() %>
+		<div class="list-group">
+			<% articles.forEach((article) => { %>
+			  <a href="/manage/articles/edit/<%= article._id %>" class="list-group-item list-group-item-action flex-column align-items-start">
+			    <div class="d-flex w-100 justify-content-between">
+			      <h5 class="mb-1"><%= article.title %></h5>
+			      <small><%= article.created_date %></small>
+			    </div>
+			    <p class="mb-1"><%= article.subtitle %></p>
+			    <small><%= article.author %></small>
+			  </a>
+			<% }) %>
+		</div>
+		<a class="btn btn-outline-warning btn-block mt-5" href="/manage/articles/add">Add Article</a>
+	</div>
+<% include ./partials/footer %>

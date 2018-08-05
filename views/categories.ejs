@@ -1,0 +1,11 @@
+<% include ./partials/head %>
+    <h1 class="text-center mb-4"><%= title %></h1>
+    <div class="container">
+	    <ul class="categories_list list-group">
+	    	<% categories.forEach((category) => { %>
+	    		<li class="list-group-item"><a href="/articles/category/<%= category._id %>"><%= category.title %></a></li>
+	    	<% }) %>
+	    </ul>
+	</div>
+
+<% include ./partials/footer %>

@@ -1,0 +1,50 @@
+<% include partials/head %>
+	    <div class="container mt-5">
+	    	<h1><%= article.title %></h1>
+	    	<h5 class="mb-5"><i><%= article.subtitle %></i></h5>
+	    	<p style="font-size: 20px; font-weight: normal; line-height: 2em;"><%= article.body %></p>
+		</div>
+
+		<% if(article.comments.length > 0) { %>
+			<div class="container mt-5 mb-4">
+				<h3>Comments</h3>
+				<% article.comments.forEach((comment) => { %>
+					<hr>
+					<h5 class="lead"><%= comment.title %></h5>
+					<small>Posted by <%= comment.author %></small>
+					<p class="mt-3"><%= comment.body %></p>
+					<hr>
+				<% }) %>
+			</div>
+		<% } %>
+
+		<div class="container mt-5">
+				<% if(errors) { %>
+					<ul>
+						<% errors.forEach((error) => { %>
+							<li class="alert alert-danger"><%= error.msg %></li>
+						<% }) %>
+					</ul>
+				<% } %>
+				<h4 class="mb-4">Add comment</h4>
+				<form class="comment-form" method="POST" action="/articles/comment/add/<%= article._id %>">
+					<div class="form-group">
+					    <label for="forTitle">Comment Title</label>
+					    <input name="title" type="text" class="form-control" id="forTitle" placeholder="Enter title for your comment" >
+					</div>
+					<div class="form-group">
+					    <label for="forTitle">Comment Author</label>
+					    <input name="author" type="text" class="form-control" id="forTitle" placeholder="Enter full name" >
+					</div>
+					<div class="form-group">
+					    <label for="forTitle">Email</label>
+					    <input name="email" type="email" class="form-control" id="forTitle" placeholder="Enter your email" >
+					</div>
+					<div class="form-group">
+					    <label for="forText">Comment Body</label>
+					    <textarea name="body" class="form-control" id="forText" placeholder="Write a comment" ></textarea>
+					</div>
+					  <button type="submit" class="btn btn-outline-primary">Add comment</button>
+				</form>
+		</div>
+<% include partials/footer %>

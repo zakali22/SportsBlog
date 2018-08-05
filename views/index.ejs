@@ -1,0 +1,25 @@
+<% include partials/head %>
+	<div class="row articles mt-5">
+		<% if(articles.length < 2) { %>
+			<% articles.forEach((article) => { %> 
+				<div class="col-md-6 offset-md-3" style="padding: 10px">
+					<a href="/articles/show/<%= article._id %>">
+						<p style="text-align: left; text-transform: uppercase;"><%= article.category %></p>
+						<h1><%= article.title %></h1>
+						<h6><%= article.subtitle %></h6>
+					</a>
+				</div>
+			<% }) %>
+		<% } else { %>
+			<% articles.forEach((article) => { %> 
+				<div class="col-md-6">
+					<a href="/articles/show/<%= article._id %>" style="padding: 10px">
+						<p style="text-align: left; text-transform: uppercase;"><%= article.category %></p>
+						<h1><%= article.title %></h1>
+						<h6><%= article.subtitle %></h6>
+					</a>
+				</div>
+			<% }) %>
+		<% } %>
+	</div>
+<% include partials/footer %>
