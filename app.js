@@ -8,11 +8,15 @@ const expressValidator = require('express-validator');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const moment = require('moment');
+const passport = require('passport');
 
 var indexRouter = require('./routes/index');
 var articlesRouter = require('./routes/articles');
 var categoriesRouter = require('./routes/categories');
 var manageRouter = require('./routes/manage');
+const register = require('./routes/register');
+const login = require('./routes/login');
+
 
 //Connect to Mongoose
 mongoose.connect('mongodb://localhost:27017/sportsblog', {useNewUrlParser: true});
@@ -25,28 +29,46 @@ db.once('open', function() {
 
 var app = express();
 
+// Express Sessions
+app.use(session({
+	secret: 'secret',
+	resave: true,
+	saveUnitialized: true
+}));
 
-//bodyParser middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(passport.initialize());
+app.use(passport.session());
 
-//connectFlash middleware
+// Express Messages
 app.use(require('connect-flash')());
 app.use((req, res, next) => {
 	res.locals.messages = require('express-messages')(req, res);
+	res.locals.user = req.user || null;
 	next();
 });
 
-//express messages middleware
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(expressValidator({
-	errorFormatter: (param, msg, value) => {
+	errorFormatter: function(param, msg, value){
 		const namespace = param.split('.')
-		, root = namespace.shift()
+		, root  = namespace.shift()
 		, formParam = root;
 
 		while(namespace.length){
 			formParam += '[' + namespace.shift() + ']';
 		}
+
 		return {
 			param: formParam,
 			msg: msg,
@@ -55,12 +77,12 @@ app.use(expressValidator({
 	}
 }));
 
-// Express session
-app.use(session({
-	secret: 'secret',
-	resave: false,
-	saveUninitialized: true
-}));
+app.use('/register', register);
+app.use('/login', login);
+app.use('/', indexRouter);
+app.use('/articles', articlesRouter);
+app.use('/manage', manageRouter);
+app.use('/categories', categoriesRouter);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -72,10 +94,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/articles', articlesRouter);
-app.use('/manage', manageRouter);
-app.use('/categories', categoriesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

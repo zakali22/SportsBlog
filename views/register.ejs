@@ -1,0 +1,36 @@
+<% include partials/head %>
+    <h1 class="text-center"><%= title %></h1>
+    <div class="container">
+		<% if(errors) { %> 
+		    <ul style="padding: 0; margin: 0; list-style: none">
+			    <% errors.forEach((error) => { %>
+			    	<li class="alert alert-danger"><%= error.msg %></li>
+				<% }) %>
+			</ul>
+		<% } %> 
+	  	<form method="post" action="/register/add">
+		  <div class="form-group">
+		    <label for="name">Full name</label>
+		    <input type="text" class="form-control" id="name" placeholder="Full name" name="name">
+		  </div>
+		  <div class="form-group">
+		    <label for="username">Username</label>
+		    <input type="text" class="form-control" id="username" placeholder="Username" name="username">
+		  </div>
+		  <div class="form-group">
+		    <label for="exampleInputEmail1">Email address</label>
+		    <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email">
+		  </div>
+		  <div class="form-group">
+		    <label for="exampleInputPassword1">Password</label>
+		    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
+		  </div>
+		  <div class="form-group">
+		    <label for="exampleInputPassword2">Confirm Password</label>
+		    <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Confirm Password" name="confirm_password">
+		  </div>
+		  <button type="submit" class="btn btn-primary">Submit</button>
+		  <a class="ml-3" href="/login">Already registered? Sign-in</a>
+		</form>
+    </div>
+<% include partials/footer %>

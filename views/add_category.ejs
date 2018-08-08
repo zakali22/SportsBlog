@@ -1,6 +1,13 @@
 <% include ./partials/head %>
     <h1 class="text-center"><%= title %></h1>
-	<div class="container">    
+	<div class="container">  
+		<% if(errors) { %> 
+		    <ul style="padding: 0; margin: 0; list-style: none">
+			    <% errors.forEach((error) => { %>
+			    	<li class="alert alert-danger"><%= error.msg %></li>
+				<% }) %>
+			</ul>
+		<% } %>   
 	   	<form method="post" action="/manage/categories/add">
 		  <div class="form-group">
 		    <label for="title">Title</label>

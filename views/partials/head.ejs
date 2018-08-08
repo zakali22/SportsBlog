@@ -30,13 +30,25 @@
 	      </li>
 	    </ul>
 	    <ul class="navbar-nav ml-auto">
-	      <li class="nav-item dropdown">
-	        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manage </a>
-	        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-	        	<a class="dropdown-item" href="/manage/categories">Categories</a>
-	        	<a class="dropdown-item" href="/manage/articles">Articles</a>
-	        </div>
-	      </li>
+	    	<% if(isAuthenticated) { %> 
+		      <li class="nav-item">
+		        <a class="nav-link" href="/logout">Logout</a>
+		      </li>
+		    <% } else { %>
+			   	<li class="nav-item">
+			        <a class="nav-link" href="/register">Register</a>
+			    </li>
+			    <li class="nav-item">
+			        <a class="nav-link" href="/login">Login</a>
+			    </li>
+			 <% } %>
+		      <li class="nav-item dropdown">
+		        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manage </a>
+		        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+		        	<a class="dropdown-item" href="/manage/categories">Categories</a>
+		        	<a class="dropdown-item" href="/manage/articles">Articles</a>
+		        </div>
+		      </li>
 	  </ul>
 	  </div>
 	</nav>

@@ -4,6 +4,15 @@ var router = express.Router();
 Article = require('../models/Article.js');
 Category = require('../models/Category.js');
 
+function ensureAuthenticated(req, res, next){
+	if(req.isAuthenticated()){
+		return next();
+	} else {
+		req.flash('error', 'You must be logged in');
+		res.redirect('/login');
+	}
+}
+
 // Articles Section
 router.get('/', (req, res, next) => {
 	Article.getArticles((err, articles) => {
@@ -15,7 +24,8 @@ router.get('/', (req, res, next) => {
 			res.render('articles', {
 				title: 'Articles',
 				articles: articles,
-				categories: categories
+				categories: categories,
+				isAuthenticated: req.isAuthenticated()
 			});
 		});
 	});
@@ -33,7 +43,8 @@ router.get('/show/:id', (req, res, next) => {
 				title: article.title,
 			  	article: article,
 			  	categories: categories,
-			  	errors: null
+			  	errors: null,
+			  	isAuthenticated: req.isAuthenticated()
 			});
 		});
 	});
@@ -54,7 +65,8 @@ router.get('/categories/:category_id', (req, res, next) => {
 					articles: articles,
 					title: category.title + ' articles',
 					categories: categories,
-					category: category.title
+					category: category.title,
+					isAuthenticated: req.isAuthenticated()
 				});
 			});
 		});

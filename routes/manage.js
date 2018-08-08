@@ -4,33 +4,45 @@ const router = express.Router();
 
 Category = require('../models/Category.js');
 Article = require('../models/Article.js');
+User = require('../models/User');
+
+function ensureAuthenticated(req, res, next){
+	if(req.isAuthenticated()){
+		return next();
+	} else {
+		req.flash('error', 'You must be logged in');
+		res.redirect('/login');
+	}
+}
 // Articles Section
 
-router.get('/articles', (req, res, next) => {
+router.get('/articles', ensureAuthenticated, (req, res, next) => {
 	Article.getArticles((err, articles) => {
 		Category.getCategories((err, categories) => {
 			res.render('manage_articles', {
 				title: 'Manage Articles',
 				articles: articles,
 				categories: categories,
-				flash: null
+				flash: null,
+				isAuthenticated: req.isAuthenticated()
 			});
 		});
 	});
 });
 
 
-router.get('/articles/add', (req, res, next) => {
+router.get('/articles/add',  ensureAuthenticated, (req, res, next) => {
   	Category.getCategories((err, categories) => {
 		res.render('add_article', {
 			title: 'Add Article',
 			categories: categories,
-			errors: null
+			errors: null,
+			isAuthenticated: req.isAuthenticated()
 		});
 	});
 });
 
-router.get('/articles/edit/:id', (req, res, next) => {
+router.get('/articles/edit/:id',  ensureAuthenticated, (req, res, next) => {
 	const queryId = {_id: req.params.id};
 
 	Article.findArticle(queryId, (err, article) => {
@@ -42,7 +54,8 @@ router.get('/articles/edit/:id', (req, res, next) => {
 			res.render('edit_article', {
 				title: 'Edit Article ',
 				article: article,
-				categories: categories
+				categories: categories,
+				isAuthenticated: req.isAuthenticated()
 			});
 		});
 	});
@@ -79,7 +92,8 @@ router.post('/articles/add',(req, res, next) => {
 			res.render('add_article', {
 				title: 'Add Article',
 				categories: categories,
-				errors: errors
+				errors: errors,
+				isAuthenticated: req.isAuthenticated()
 			});
 		});
 	} else {
@@ -115,26 +129,29 @@ router.delete('/articles/delete/:id', (req, res, next) => {
 
 // Category Section
 
-router.get('/categories', (req, res, next) => {
+router.get('/categories', ensureAuthenticated, (req, res, next) => {
 	Category.getCategories((err, categories) => {
 		res.render('manage_categories', {
 			title: 'Manage Categories',
-			categories: categories
+			categories: categories,
+			isAuthenticated: req.isAuthenticated()
 		});
 	});
 });
 
-router.get('/categories/add', (req, res, next) => {
+router.get('/categories/add',  ensureAuthenticated, (req, res, next) => {
 	Category.getCategories((err, categories) => {
 		res.render('add_category', {
 			title: 'Add Category',
-			categories: categories
+			categories: categories,
+			isAuthenticated: req.isAuthenticated(),
+			errors: null
 		});
 	});
 });
 
 
-router.get('/categories/edit/:id', (req, res, next) => {
+router.get('/categories/edit/:id', ensureAuthenticated, (req, res, next) => {
 	const queryId = {_id: req.params.id};
 
 	Category.findCategory(queryId, (err, category) => {
@@ -144,24 +161,40 @@ router.get('/categories/edit/:id', (req, res, next) => {
 		console.log(category);
 		res.render('edit_category', {
 			title: 'Edit ' + category.title + ' Category ',
-			category: category
+			category: category,
+			isAuthenticated: req.isAuthenticated()
 		});
 	});
 });
 
 
 router.post('/categories/add', (req, res, next) => {
-	let category = new Category;
-	category.title = req.body.title;
-	category.description = req.body.description;
+	req.checkBody('title', 'Title is required').notEmpty();
+	req.checkBody('description', 'Description is required').notEmpty();
+	let errors = req.validationErrors();
 
-	Category.addCategory(category, (err, categories) => {
-		if(err){
-			console.log(err);
-		}
-		console.log(categories);
-		res.redirect('/manage/categories');
-	});
+	if(errors){
+		Category.getCategories((err, categories) => {
+			res.render('add_category', {
+				title: 'Add Category',
+				categories: categories,
+				errors: errors,
+				isAuthenticated: req.isAuthenticated()
+			});
+		});
+	} else {
+		let category = new Category;
+		category.title = req.body.title;
+		category.description = req.body.description;
+
+		Category.addCategory(category, (err, categories) => {
+			if(err){
+				console.log(err);
+			}
+			console.log(categories);
+			res.redirect('/manage/categories');
+		});
+	}
 });
 
 router.post('/categories/edit/:id', (req, res, next) => {
